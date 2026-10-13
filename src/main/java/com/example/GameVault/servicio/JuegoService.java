@@ -51,4 +51,10 @@ public class JuegoService {
             return "default.png";
         }
     }
+    public List<Juego> buscarporTitulo(String palabra) {
+        if(palabra == null || palabra.trim().isEmpty()){
+            return obtenerTodos();
+        }
+        return juegoRepository.findByTituloContainingIgnoreCase(palabra);
+    }
 }
