@@ -47,19 +47,7 @@ public class GameController {
                                @RequestParam("portada")MultipartFile portada){
         String nombreArchivo = "default.png";
         if(!portada.isEmpty()){
-            try{
-                Path uploadPath = Paths.get(UPLOAD_DIR);
-                if(!Files.exists(uploadPath)){
-                    Files.createDirectories(uploadPath);
-                }
-                nombreArchivo = UUID.randomUUID().toString() + "_" + portada.getOriginalFilename();
-                Path filePath = uploadPath.resolve(nombreArchivo);
 
-                Files.copy(portada.getInputStream(), filePath);
-                System.out.println("Archivo guardado en: " + filePath.toAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         Juego juegoNuevo = new Juego(idCounter++, titulo, descripcion, nombreArchivo);
