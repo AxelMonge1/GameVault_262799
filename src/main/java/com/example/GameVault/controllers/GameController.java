@@ -1,7 +1,9 @@
 package com.example.GameVault.controllers;
 
 import com.example.GameVault.models.Juego;
+import com.example.GameVault.models.Usuario;
 import com.example.GameVault.servicio.JuegoService;
+import com.example.GameVault.servicio.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,8 @@ import java.util.UUID;
 public class GameController {
     @Autowired
     private JuegoService juegoService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/framents-demo")
     public String fragmentsDemo(){
@@ -39,17 +43,31 @@ public class GameController {
     }
 
     @GetMapping("/juegos/nuevo")
-    public String mostrarFormulario(){
+    public String mostrarFormulario(Model model){
+        model.addAttribute("juego", new Juego());
+
         return "formulario";
+    }
+
+    @GetMapping("/mis-juegos")
+    public String dashboard(Model model){
+        Usuario logeado = usuarioService.obtenerUsuarioLogeado();
+        model.addAttribute("juegos", juegoService.obtenerJuegosPorUsuario(logeado.getId()));
+        model.addAttribute("usuario", logeado);
+        return "mis-juegos";
     }
 
     @GetMapping("/juegos")
     public String guardarJuego(@RequestParam("titulo") String titulo,
                                @RequestParam("descripcion") String descripcion,
+                               @RequestParam("precio") Double precio,
+                               @RequestParam("categoria") String categoria,
                                @RequestParam("portada")MultipartFile portada){
         Juego nuevoJuego = new Juego();
         nuevoJuego.setTitulo(titulo);
         nuevoJuego.setDescripcion(descripcion);
+        nuevoJuego.setPrecio(precio);
+        nuevoJuego.setCategoria(categoria);
 
         juegoService.guardarJuego(nuevoJuego, portada);
         return "redirect:/juegos";

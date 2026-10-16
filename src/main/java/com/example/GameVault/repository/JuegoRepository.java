@@ -13,6 +13,8 @@ public interface JuegoRepository extends JpaRepository<Juego, Long> {
 
     List<Juego> findByPrecioLessThan(Double precio);
 
+    List<Juego> findByUsuarioId(Long id);
+
     @Query("SELECT j FROM Juegos j ORDER BY j.id DESC")
     List<Juego> obtenerJuegosRecientes();
 

@@ -21,4 +21,12 @@ public class Juego {
     private String descripcion;
     @Column(name = "portada_url")
     private String portadaUrl;
+    @Column
+    private Double precio;
+    @Column
+    private String categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "uausario_id")
+    private Usuario usuario;
 }
