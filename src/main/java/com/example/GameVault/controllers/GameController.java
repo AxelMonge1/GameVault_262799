@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,4 +74,45 @@ public class GameController {
         juegoService.guardarJuego(nuevoJuego, portada);
         return "redirect:/juegos";
     }
+
+    @GetMapping("/juegos/editar/{id}")
+    public String editarJuego(@PathVariable Long id, Model model) {
+        Juego juego = juegoService.obtenerJuegoPorId(id);
+        Usuario logueado = usuarioService.obtenerUsuarioLogeado();
+        if (juego != null && juego.getUsuario().getId() == logueado.getId()) {
+            model.addAttribute("juego", juego);
+            return "formulario";
+        }
+        return "redirect:/mis-juegos";
+    }
+
+    @PostMapping("/juegos/editar/{id}")
+    public String actualizarJuego(@PathVariable Long id,
+                                  @RequestParam("titulo") String titulo,
+                                  @RequestParam("descripcion") String descripcion,
+                                  @RequestParam("precio") Double precio,
+                                  @RequestParam("categoria") String categoria,
+                                  @RequestParam(value = "portada", required = false) MultipartFile portada) {
+        Juego juegoExistente = juegoService.obtenerJuegoPorId(id);
+        Usuario logueado = usuarioService.obtenerUsuarioLogeado();
+        if (juegoExistente != null && juegoExistente.getUsuario().getId() == logueado.getId()) {
+            juegoExistente.setTitulo(titulo);
+            juegoExistente.setDescripcion(descripcion);
+            juegoExistente.setPrecio(precio);
+            juegoExistente.setCategoria(categoria);
+            juegoService.guardarJuego(juegoExistente, portada);
+        }
+        return "redirect:/mis-juegos";
+    }
+
+    @PostMapping("/juegos/eliminar/{id}")
+    public String eliminarJuego(@PathVariable Long id) {
+        Juego juego = juegoService.obtenerJuegoPorId(id);
+        Usuario logueado = usuarioService.obtenerUsuarioLogeado();
+        if (juego != null && juego.getUsuario().getId() == logueado.getId()) {
+            juegoService.eliminarJuego(id);
+        }
+        return "redirect:/mis-juegos";
+    }
+
 }

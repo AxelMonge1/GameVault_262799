@@ -1,12 +1,14 @@
 :root {
     --bg-dark: #0f172a;
     --bg-panel: #1e293b;
+    --bg-surface: #284c82;
     --primary: #3b82f6;
     --primary-glow: #3b82f6aa;
     --accent: #8b5cf6;
     --accent-glow: #8b5cf6aa;
     --text-light: #f8fafc;
     --text-muted: #94a3b8;
+    --text-color: #FFFFFF;
     --success: #10b981;
     --danger: #ef4444;
 }
